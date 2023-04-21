@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 6.1.5">
+  <meta name="description" content="mapdescriptor API docs, for the Dart programming language.">
+  <title>mapdescriptor - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">mapdescriptor package</li>
+  </ol>
+  <div class="self-name">mapdescriptor</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <!-- 
+This README describes the package. If you publish this package to pub.dev,
+this README's contents appear on the landing page for your package.
+
+For information about how to write a good package README, see the guide for
+[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+
+For general information about developing packages, see the Dart guide for
+[creating packages](https://dart.dev/guides/libraries/create-library-packages)
+and the Flutter guide for
+[developing packages and plugins](https://flutter.dev/developing-packages). 
+-->
+<p>This is an MapDescriptor package that allows users to convert DateTime values to strings and vice versa in a given Map of key-value pairs. It depends on the cloud_firestore package and is especially useful for users who receive data in Map form from Firestore and need to convert the DateTime values for their application needs. The package provides two methods - convertTimeStampToStr and convertStrToTimeStamp - that handle the conversion of DateTime values to strings and vice versa respectively, and a third helper method processDateTimeValues that recursively searches for DateTime values in nested Maps..</p>
+<h2 id="features">Features</h2>
+<p>This package can convert Timestamp objects to ISO 8601 strings in a given Map.
+  This package can also convert ISO 8601 strings to Timestamp objects in a given Map, provided that the keys of the Timestamp objects are specified.
+  The package can handle nested Maps containing Timestamp objects.
+  This package is designed to work with data retrieved from Firestore, where Timestamp objects are commonly used to store date and time information.
+  Overall, this package provides a simple way to handle Timestamp objects in Dart and Firestore, making it easier for developers to work with date and time information in their apps.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>TODO: Prerequisites for using this package are:
+
+  A Flutter project created using Flutter SDK.
+  The cloud_firestore package added as a dependency in the project. This can be done by adding cloud_firestore: ^2.5.4 to the dependencies section of the pubspec.yaml file and running flutter pub get.
+  A basic understanding of working with maps and Firestore in Flutter.
+  To start using the package, users can simply import the MapDescriptor class and create an instance of it. They can then use the convertTimeStampToStr method to convert any DateTime or Timestamp values in their map to strings, and the convertStrToTimeStamp method to convert any strings back to DateTime values.
+  
+  It is recommended that users read the documentation and examples provided in the package to understand how to use it effectively.</p>
+<h2 id="usage">Usage</h2>
+<h4>
+  1-Convert timestamps in a Firestore document to DateTime objects:</h4>
+  <pre class="language-dart"><code class="language-dart">
+    <span class="hljs-keyword">import</span> 'package:mapdescriptor/mapdescriptor.dart';
+    <span class="hljs-keyword">import</span> 'package:cloud_firestore/cloud_firestore.dart';
+    <br>
+   main() async {
+     <span class="hljs-keyword"> final</span> doc =  <span class="hljs-keyword">await</span> FirebaseFirestore.instance.collection('my_collection').doc('my_doc').get();
+     <span class="hljs-keyword"> Map</span> myMap =  doc.data();
+      final convertedMap = MapDescriptor().convertStrToTimeStamp(myMap, haveTimeStamps: <span class="hljs-keyword">true</span>, timeStampsKeys: [['birthday']]);
+      print(convertedMap['birthday']);<br><p> should print a DateTime object</p>
+    }
+    </code></pre>
+    <h4>2Convert all timestamps in a nested JSON object to ISO 8601 strings:</h4>
+<pre class="language-dart"><code class="language-dart">
+  import 'package:mapdescriptor/mapdescriptor.dart';
+
+void main() {
+  final myMap = {
+    'name': 'John Doe',
+    'age': 30,
+    'timestamp': Timestamp(seconds=1560523991, nanoseconds=286000000),
+    'activities': {
+      'activity1': {
+        'type': 'sport',
+        'timestamp': Timestamp(seconds=1560523991, nanoseconds=286000000),
+      },
+      'activity2': {
+        'type': 'Netflix',
+        'timestamp': Timestamp(seconds=1560523991, nanoseconds=286000000),
+      }
+    }
+  };
+
+  final convertedMap = MapDescriptor().convertTimeStampToStr(myMap);
+  print(convertedMap['timestamp']); // should print an ISO 8601 string
+  print(convertedMap['activities']['activity1']['timestamp']); // should print an ISO 8601 string
+  print(convertedMap['activities']['activity2']['timestamp']); // should print an ISO 8601 string
+}
+
+</code></pre>
+<h2 id="additional-information">Additional information</h2>
+<p>To find more information about the package, users can visit the package's GitHub repository at 
+  <a href="https://github.com/KBM90/mapdescriptor">https://github.com/KBM90/mapdescriptor </a> 
+  The repository contains a README file with information on how to use the package, as well as the package's API reference.
+
+  Users can contribute to the package by submitting pull requests through GitHub. The package authors welcome contributions, but ask that contributors follow the guidelines outlined in the CONTRIBUTING file in the repository.
+  
+  To file issues with the package, users can submit a GitHub <a href="https://github.com/KBM90/mapdescriptor/issues">issue</a>  in the repository. The package authors will do their best to respond to issues in a timely manner and provide assistance where possible.
+  
+  Users can expect a friendly and responsive interaction from the package authors. The authors are dedicated to maintaining and improving the package, and are open to feedback and suggestions from users.</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="mapdescriptor">
+  <span class="name"><a href="mapdescriptor/mapdescriptor-library.html">mapdescriptor</a></span> 
+
+</dt>
+<dd>Support for doing something awesome.
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li class="self-crumb">mapdescriptor package</li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">mapdescriptor</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="mapdescriptor/mapdescriptor-library.html">mapdescriptor</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    mapdescriptor
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
