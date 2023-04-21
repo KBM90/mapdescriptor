@@ -1,9 +1,4 @@
 
-
-```dart
-const like = 'sample';
-```
-
 This is an MapDescriptor package that allows users to convert DateTime values to strings and vice versa in a given Map of key-value pairs. It depends on the cloud_firestore package and is especially useful for users who receive data in Map form from Firestore and need to convert the DateTime values for their application needs. The package provides two methods - convertTimeStampToStr and convertStrToTimeStamp - that handle the conversion of DateTime values to strings and vice versa respectively, and a third helper method processDateTimeValues that recursively searches for DateTime values in nested Maps..
 
 ### Features
