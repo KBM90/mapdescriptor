@@ -63,12 +63,11 @@ and the Flutter guide for
 -->
 <p>This is an MapDescriptor package that allows users to convert DateTime values to strings and vice versa in a given Map of key-value pairs. It depends on the cloud_firestore package and is especially useful for users who receive data in Map form from Firestore and need to convert the DateTime values for their application needs. The package provides two methods - convertTimeStampToStr and convertStrToTimeStamp - that handle the conversion of DateTime values to strings and vice versa respectively, and a third helper method processDateTimeValues that recursively searches for DateTime values in nested Maps..</p>
 <h2 id="features">Features</h2>
-<p>This package can convert Timestamp objects to ISO 8601 strings in a given Map.
-  This package can also convert ISO 8601 strings to Timestamp objects in a given Map, provided that the keys of the Timestamp objects are specified.
-  The package can handle nested Maps containing Timestamp objects.
-  This package is designed to work with data retrieved from Firestore, where Timestamp objects are commonly used to store date and time information.
-  Overall, this package provides a simple way to handle Timestamp objects in Dart and Firestore, making it easier for developers to work with date and time information in their apps.</p>
-<h2 id="getting-started">Getting started</h2>
+<p>This package provides a class called MapDescriptor which contains methods to help you convert timestamps to and from string format in a Map object.
+  The convertTimeStampToStr method takes a Map object as input and returns a new Map object with all Timestamp values converted to string format. This is useful when you need to convert your data to a format that can be easily stored or transmitted.
+  The convertStrToTimeStamp method takes a Map object as input and returns a new Map object with all string values that match a timestamp format converted to Timestamp objects. This is useful when you need to convert data that was previously stored or transmitted in string format back to Timestamp objects.
+  Both of these methods can handle nested Map objects and will recursively search for Timestamp values or string values matching the timestamp format.
+  Overall, this package can be helpful for working with timestamps in Map objects in Flutter and can save you time and effort in converting between string and Timestamp formats. Contributions to this package are also welcome.<h2 id="getting-started">Getting started</h2>
 <p>TODO: Prerequisites for using this package are:
 
   A Flutter project created using Flutter SDK.
