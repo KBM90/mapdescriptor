@@ -1,52 +1,38 @@
 class MapDescriptor {
   Map<String, dynamic> convertTimeStampToStr(Map<String, dynamic> myMap) =>
-      processDateTimeValues(myMap);
+      _processDateTimeValues(myMap);
 
-  convertStrToTimeStamp(Map<String, dynamic> myMap,
-      {bool haveTimeStamps = false,
-      List<List<String>> timeStampsKeys = const []}) {
-    if (haveTimeStamps) {
-      for (List<String> tKey in timeStampsKeys) {
-        switch (tKey.length) {
-          case 1:
-            if (myMap[tKey[0]] != null) {
-              String timestampString =
-                  myMap[tKey[0]]; //get the timestamp stored as String
-              myMap[tKey[0]] = DateTime.parse(timestampString);
-            }
-            break;
-          case 2:
-            if (myMap[tKey[0]][tKey[1]] != null) {
-              String timestampString =
-                  myMap[tKey[0]][tKey[1]]; //get the timestamp stored as String
-              myMap[tKey[0]][tKey[1]] = DateTime.parse(timestampString);
-            }
-            break;
-          case 3:
-            if (myMap[tKey[0]][tKey[1]][tKey[2]] != null) {
-              String timestampString = myMap[tKey[0]][tKey[1]]
-                  [tKey[2]]; //get the timestamp stored as String
-              myMap[tKey[0]][tKey[1]][tKey[2]] =
-                  DateTime.parse(timestampString);
-            }
-            break;
-        }
+  // convert String form of timestamp to timestamp
+  Map<String, dynamic> convertStrToTimeStamp(
+    Map<String, dynamic> myMap,
+  ) {
+    Map<String, dynamic> newMap = {...myMap};
+    RegExp timestampRegex =
+        RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}');
+
+    myMap.forEach((key, value) {
+      if (value is String && timestampRegex.hasMatch(value)) {
+        newMap[key] = Timestamp.fromDate(DateTime.parse(value));
+      } else if (value is Map<String, dynamic>) {
+        // recursively search for DateTime values in nested maps
+        newMap[key] = convertStrToTimeStamp(value);
       }
-    }
-    return myMap;
+    });
+    return newMap;
   }
 
-  Map<String, dynamic> processDateTimeValues(Map<String, dynamic> map) {
+  Map<String, dynamic> _processDateTimeValues(Map<String, dynamic> map) {
+    Map<String, dynamic> newMap = {...map};
     map.forEach((key, value) {
       if (value is Timestamp) {
         String timestampString = value.toDate().toIso8601String();
-        map[key] = timestampString;
+        newMap[key] = timestampString;
       } else if (value is Map<String, dynamic>) {
         // recursively search for DateTime values in nested maps
-        processDateTimeValues(value);
+        newMap[key] = _processDateTimeValues(value);
       }
     });
-    return map;
+    return newMap;
   }
 }
 

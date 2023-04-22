@@ -23,12 +23,8 @@ void main() {
       convertedData); // Output: {name: John Doe, age: 30, timestamp: 2022-11-22T09:28:56.654196}
 
   // Convert the String value back to a Timestamp
-  Map<String, dynamic> convertedBackData = mapDescriptor.convertStrToTimeStamp(
-      convertedData,
-      haveTimeStamps: true,
-      timeStampsKeys: [
-        ['timestamp']
-      ]);
+  Map<String, dynamic> convertedBackData =
+      mapDescriptor.convertStrToTimeStamp(convertedData);
 
   // Print the converted back data
   print(convertedBackData);

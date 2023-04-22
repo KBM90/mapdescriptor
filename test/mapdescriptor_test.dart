@@ -22,7 +22,7 @@ void main() {
       };
 
       Map<String, dynamic> processedMap =
-          mapdescriptor.processDateTimeValues(map);
+          mapdescriptor.convertTimeStampToStr(map);
 
       expect(processedMap, same(map));
       expect(processedMap['timestamp'], isA<String>());
@@ -53,12 +53,7 @@ void main() {
         'timestamp': DateTime.now().toIso8601String(),
       };
 
-      List<List<String>> timeStampsKeys = [
-        ['timestamp']
-      ];
-
-      Map<String, dynamic> newMap = mapdescriptor.convertStrToTimeStamp(myMap,
-          haveTimeStamps: true, timeStampsKeys: timeStampsKeys);
+      Map<String, dynamic> newMap = mapdescriptor.convertStrToTimeStamp(myMap);
 
       expect(newMap['name'], equals('John Doe'));
       expect(newMap['age'], equals(30));
