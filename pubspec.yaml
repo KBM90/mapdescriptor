@@ -1,6 +1,6 @@
 name: mapdescriptor
 description: This is an MapScanner package that allows users to convert DateTime values to strings and vice versa in a given Map of key-value pairs. The package provides two methods - convertTimeStampToStr and convertStrToTimeStamp - that handle the conversion of DateTime values to strings and vice versa respectively
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/KBM90/mapdescriptor
 
 environment:
