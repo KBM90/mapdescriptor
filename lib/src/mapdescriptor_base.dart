@@ -1,17 +1,32 @@
+//make a factory design pattern in the next version 2.0.0
 class MapDescriptor {
-  Map<String, dynamic> convertTimeStampToStr(Map<String, dynamic> myMap) =>
-      _processDateTimeValues(myMap);
+  /// Takes a map which may contains values of type TimeStamp and convert theses values
+  /// to string form of date (YYYY-MM-ddTHH:MM:SS.NNNN(Time Zone))
+  /// @param : map => Map<String,dynamic>
+  /// @return : Map<String,dynamic>
 
-  // convert String form of timestamp to timestamp
+  Map<String, dynamic> convertTimeStampToStr(Map<String, dynamic> map) {
+    if (map.isEmpty) {
+      throw ArgumentError('You provided an empty map: $map');
+    }
+    return _processDateTimeValues(map);
+  }
+
+  /// Takes a map which may contains string forms values of TimeStamp and convert theses values
+  /// to TimeStamp form of date TimeStamp(seconds:int,nanoseconds:int)
+  /// @param : map => Map<String,dynamic>
+  /// @return : Map<String,dynamic>
   Map<String, dynamic> convertStrToTimeStamp(
-    Map<String, dynamic> myMap,
+    Map<String, dynamic> map,
   ) {
-    Map<String, dynamic> newMap = {...myMap};
-    RegExp timestampRegex =
+    Map<String, dynamic> newMap = {...map};
+    RegExp isoStringRegex =
         RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}');
-
-    myMap.forEach((key, value) {
-      if (value is String && timestampRegex.hasMatch(value)) {
+    if (map.isEmpty) {
+      throw ArgumentError('You provided an empty map: $map');
+    }
+    map.forEach((key, value) {
+      if (value is String && isoStringRegex.hasMatch(value)) {
         newMap[key] = Timestamp.fromDate(DateTime.parse(value));
       } else if (value is Map<String, dynamic>) {
         // recursively search for DateTime values in nested maps
@@ -19,6 +34,40 @@ class MapDescriptor {
       }
     });
     return newMap;
+  }
+
+  bool containsTimeStamp(Map<String, dynamic> map) {
+    bool contains = false;
+    if (map.isEmpty) {
+      throw ArgumentError('You provided an empty map: $map');
+    }
+    map.forEach((key, value) {
+      if (value is Timestamp) {
+        contains = true;
+      } else if (value is Map<String, dynamic>) {
+        // recursively search for DateTime values in nested maps
+        containsTimeStamp(value);
+      }
+    });
+    return contains;
+  }
+
+  bool containsISO8601Str(Map<String, dynamic> map) {
+    bool contains = false;
+    RegExp isoStringRegex =
+        RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}');
+    if (map.isEmpty) {
+      throw ArgumentError('You provided an empty map: $map');
+    }
+    map.forEach((key, value) {
+      if (value is String && isoStringRegex.hasMatch(value)) {
+        contains = true;
+      } else if (value is Map<String, dynamic>) {
+        // recursively search for DateTime values in nested maps
+        containsISO8601Str(value);
+      }
+    });
+    return contains;
   }
 
   Map<String, dynamic> _processDateTimeValues(Map<String, dynamic> map) {

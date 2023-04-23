@@ -49,36 +49,29 @@
   <div id="dartdoc-main-content" class="main-content">
       
 <section class="desc markdown">
-  <!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+  <h2 id="Introduction" style="color: #f02d64">Introduction</h2>
+<p>This is an MapDescriptor package that allows users to convert DateTime values to strings and vice versa in a given Map of key-value   pairs. especially useful for users who receive data in Map form from Firestore and need to convert the DateTime values for their application needs. <br>
+  The package provides two methods - convertTimeStampToStr and convertStrToTimeStamp - that handle the conversion of DateTime values to strings and vice versa respectively, and a third helper method processDateTimeValues that recursively searches for DateTime values in nested Maps..</p>
+<h2 id="features" style="color: #f02d64">Features</h2>
+<p>This package provides a class called MapDescriptor which contains methods to help you convert timestamps to and from string(ISO 8601) format in a Map object. <br>
+  The convertTimeStampToStr method takes a Map object as input and returns a new Map object with all Timestamp values converted to string format. This is useful when you need to convert your data to a format that can be easily stored or transmitted. <br>
+  The convertStrToTimeStamp method takes a Map object as input and returns a new Map object with all string values that match a timestamp format converted to Timestamp objects. This is useful when you need to convert data that was previously stored or transmitted in string format back to Timestamp objects. <br>
+  Both of these methods can handle nested Map objects and will recursively search for Timestamp values or string values matching the timestamp format. <br>
+  Overall, this package can be helpful for working with timestamps in Map objects in Flutter and can save you time and effort in converting between string and Timestamp formats. Contributions to this package are also <br>
+  <div style="background-color: #f02d64"><h2 id="getting-started" style="color: #f3f6f4">Getting started</h2></div>
+<p><h4> TODO: Prerequisites for using this package are:</h3>
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-<p>This is an MapDescriptor package that allows users to convert DateTime values to strings and vice versa in a given Map of key-value pairs. It depends on the cloud_firestore package and is especially useful for users who receive data in Map form from Firestore and need to convert the DateTime values for their application needs. The package provides two methods - convertTimeStampToStr and convertStrToTimeStamp - that handle the conversion of DateTime values to strings and vice versa respectively, and a third helper method processDateTimeValues that recursively searches for DateTime values in nested Maps..</p>
-<h2 id="features">Features</h2>
-<p>This package provides a class called MapDescriptor which contains methods to help you convert timestamps to and from string format in a Map object.
-  The convertTimeStampToStr method takes a Map object as input and returns a new Map object with all Timestamp values converted to string format. This is useful when you need to convert your data to a format that can be easily stored or transmitted.
-  The convertStrToTimeStamp method takes a Map object as input and returns a new Map object with all string values that match a timestamp format converted to Timestamp objects. This is useful when you need to convert data that was previously stored or transmitted in string format back to Timestamp objects.
-  Both of these methods can handle nested Map objects and will recursively search for Timestamp values or string values matching the timestamp format.
-  Overall, this package can be helpful for working with timestamps in Map objects in Flutter and can save you time and effort in converting between string and Timestamp formats. Contributions to this package are also welcome.<h2 id="getting-started">Getting started</h2>
-<p>TODO: Prerequisites for using this package are:
-
-  A Flutter project created using Flutter SDK.
-  The cloud_firestore package added as a dependency in the project. This can be done by adding cloud_firestore: ^2.5.4 to the dependencies section of the pubspec.yaml file and running flutter pub get.
-  A basic understanding of working with maps and Firestore in Flutter.
-  To start using the package, users can simply import the MapDescriptor class and create an instance of it. They can then use the convertTimeStampToStr method to convert any DateTime or Timestamp values in their map to strings, and the convertStrToTimeStamp method to convert any strings back to DateTime values.
+  - A Flutter project created using Flutter SDK. <br>
+  - A basic understanding of working with maps(collections) and Firestore in Flutter. <br>
+  - SDK 2.19.6 or earlier. <br>
+    To start using the package, users can simply import the MapDescriptor class and create an instance of it. <br>
+    They can then use the convertTimeStampToStr method to convert any Timestamp values in their map to strings(ISO 8601), and the convertStrToTimeStamp method to convert any strings back to DateTime values. <br>
+    They can also check if a map contains TimeStamp or ISO 8601 String values by using containsTimeStamp() or containsISO8601String() methods. <br>
   
   It is recommended that users read the documentation and examples provided in the package to understand how to use it effectively.</p>
-<h2 id="usage">Usage</h2>
+<h2 id="usage" style="color: #f02d64">Usage</h2>
 <h4>
-  1-Convert timestamps in a Firestore document to DateTime objects:</h4>
+  1-Convert timestamps in a Firestore document to ISO 8601 String:</h4>
   <pre class="language-dart"><code class="language-dart">
     <span class="hljs-keyword">import</span> 'package:mapdescriptor/mapdescriptor.dart';
     <span class="hljs-keyword">import</span> 'package:cloud_firestore/cloud_firestore.dart';
@@ -86,11 +79,11 @@ and the Flutter guide for
    main() async {
      <span class="hljs-keyword"> final</span> doc =  <span class="hljs-keyword">await</span> FirebaseFirestore.instance.collection('my_collection').doc('my_doc').get();
      <span class="hljs-keyword"> Map</span> myMap =  doc.data();
-      final convertedMap = MapDescriptor().convertStrToTimeStamp(myMap, haveTimeStamps: <span class="hljs-keyword">true</span>, timeStampsKeys: [['birthday']]);
-      print(convertedMap['birthday']);<br><p> should print a DateTime object</p>
+      final convertedMap = MapDescriptor().convertStrToTimeStamp(myMap);
+      print(convertedMap['birthday']);<br><p> //should print a "1990-12-12T12:14:40.412Z"</p>
     }
     </code></pre>
-    <h4>2Convert all timestamps in a nested JSON object to ISO 8601 strings:</h4>
+    <h4>2-Convert all timestamps in a nested JSON object to ISO 8601 strings:</h4>
 <pre class="language-dart"><code class="language-dart">
   import 'package:mapdescriptor/mapdescriptor.dart';
 
@@ -112,25 +105,22 @@ void main() {
   };
 
   final convertedMap = MapDescriptor().convertTimeStampToStr(myMap);
-  print(convertedMap['timestamp']); // should print an ISO 8601 string
-  print(convertedMap['activities']['activity1']['timestamp']); // should print an ISO 8601 string
-  print(convertedMap['activities']['activity2']['timestamp']); // should print an ISO 8601 string
+  print(convertedMap['timestamp']); // should print an ISO 8601 string ex : "1990-12-12T12:14:40.412Z"
+  print(convertedMap['activities']['activity1']['timestamp']); // should print an ISO 8601 string ex : "1990-12-12T12:14:40.412Z"
+  print(convertedMap['activities']['activity2']['timestamp']); // should print an ISO 8601 string ex :"1990-12-12T12:14:40.412Z"
 }
 
 </code></pre>
-<h2 id="additional-information">Additional information</h2>
-<p>To find more information about the package, users can visit the package's GitHub repository at 
+<h2 id="additional-information" style="color: #f02d64">Additional information</h2>
+<p>To find more information about the package, users can visit the package's GitHub repository at :
   <a href="https://github.com/KBM90/mapdescriptor">https://github.com/KBM90/mapdescriptor </a> 
-  The repository contains a README file with information on how to use the package, as well as the package's API reference.
-
-  Users can contribute to the package by submitting pull requests through GitHub. The package authors welcome contributions, but ask that contributors follow the guidelines outlined in the CONTRIBUTING file in the repository.
-  
-  To file issues with the package, users can submit a GitHub <a href="https://github.com/KBM90/mapdescriptor/issues">issue</a>  in the repository. The package authors will do their best to respond to issues in a timely manner and provide assistance where possible.
-  
+  The repository contains a README file with information on how to use the package, as well as the package's API reference. <br>
+  Users can contribute to the package by submitting pull requests through GitHub. <br>
+  The package authors welcome contributions, but ask that contributors follow the guidelines outlined in the CONTRIBUTING file in the repository. <br>
+  To file issues with the package, users can submit a GitHub <a href="https://github.com/KBM90/mapdescriptor/issues">issue</a>  in the repository. <br>
+  The package authors will do their best to respond to issues in a timely manner and provide assistance where possible. <br>
   Users can expect a friendly and responsive interaction from the package authors. The authors are dedicated to maintaining and improving the package, and are open to feedback and suggestions from users.</p>
 </section>
-
-
       <section class="summary">
           <h2>Libraries</h2>
         <dl>
@@ -174,7 +164,7 @@ void main() {
 <footer>
   <span class="no-break">
     mapdescriptor
-      1.0.0
+      1.0.2
   </span>
 
   

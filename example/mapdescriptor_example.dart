@@ -30,4 +30,46 @@ void main() {
   print(convertedBackData);
 
   // Output: {name: John Doe, age: 30, timestamp: Timestamp(seconds=1669192136, nanoseconds=654196000)}
+
+  //# 4-Check if there is a TimeStamp Value inside a Map:
+
+  final map1 = {
+    'name': 'Khalid Ibn Walid',
+    'age': 70,
+    'birthday': Timestamp(1560523991, 286000000),
+  };
+  print(MapDescriptor().containsTimeStamp(map1)); //output True
+  final map2 = {
+    'name': 'Andrew Tate',
+    'age': 30,
+  };
+  print(MapDescriptor().containsTimeStamp(map2)); //output false
+
+  Map<String, dynamic> myMap = {
+    'name': 'Hicham Hatri',
+    'age': 32,
+    'bithday': "1990-12-12T12:14:40.412Z",
+    "activities": {
+      "sport": {
+        "type": "Boxing",
+        "start": "2001-11-06T12:14:40.412Z",
+      },
+    }
+  };
+  Map<String, dynamic> myMap2 = {
+    'name': 'Ayoub Arabi',
+    'age': 30,
+    'bithday': Timestamp(12115454, 121254),
+    "activities": {
+      "sport": {
+        "type": "Soccer",
+        "start": Timestamp(12115454, 121254),
+      },
+    }
+  };
+
+  bool contains = MapDescriptor().containsISO8601Str(myMap);
+  print(contains); //output true
+  bool notcontains = MapDescriptor().containsISO8601Str(myMap2);
+  print(notcontains); // output false
 }
