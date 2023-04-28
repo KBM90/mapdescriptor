@@ -1,5 +1,9 @@
-//make a factory design pattern in the next version 2.0.0
 class MapDescriptor {
+  final List<String> _timeStampKeys = [];
+  List<String> get timeStampKeys => _timeStampKeys;
+  final List<String> _iso8601Keys = [];
+  List<String> get iso8601Keys => _iso8601Keys;
+
   /// Takes a map which may contains values of type TimeStamp and convert theses values
   /// to string form of date (YYYY-MM-ddTHH:MM:SS.NNNN(Time Zone))
   /// @param : map => Map<String,dynamic>
@@ -37,23 +41,26 @@ class MapDescriptor {
   }
 
   bool containsTimeStamp(Map<String, dynamic> map) {
-    bool contains = false;
     if (map.isEmpty) {
       throw ArgumentError('You provided an empty map: $map');
     }
     map.forEach((key, value) {
-      if (value is Timestamp) {
-        contains = true;
+      if (value is! int &&
+          value is! double &&
+          value is! String &&
+          value is! bool &&
+          value is! List &&
+          value is! Map) {
+        _timeStampKeys.add(key);
       } else if (value is Map<String, dynamic>) {
         // recursively search for DateTime values in nested maps
         containsTimeStamp(value);
       }
     });
-    return contains;
+    return timeStampKeys.isNotEmpty;
   }
 
   bool containsISO8601Str(Map<String, dynamic> map) {
-    bool contains = false;
     RegExp isoStringRegex =
         RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}');
     if (map.isEmpty) {
@@ -61,21 +68,39 @@ class MapDescriptor {
     }
     map.forEach((key, value) {
       if (value is String && isoStringRegex.hasMatch(value)) {
-        contains = true;
+        _iso8601Keys.add(key);
       } else if (value is Map<String, dynamic>) {
         // recursively search for DateTime values in nested maps
         containsISO8601Str(value);
       }
     });
-    return contains;
+    return _iso8601Keys.isNotEmpty;
+  }
+
+  Map<String, dynamic> deepCopy(Map<String, dynamic> original) {
+    Map<String, dynamic> copy = {};
+    original.forEach((key, value) {
+      if (value is Map<String, dynamic>) {
+        copy[key] = deepCopy(value);
+      } else {
+        copy[key] = value;
+      }
+    });
+    return copy;
   }
 
   Map<String, dynamic> _processDateTimeValues(Map<String, dynamic> map) {
+    print("hello");
     Map<String, dynamic> newMap = {...map};
     map.forEach((key, value) {
-      if (value is Timestamp) {
+      if (value is! double &&
+          value is! String &&
+          value is! bool &&
+          value is! List<dynamic> &&
+          value is! Map<String, dynamic>) {
         String timestampString = value.toDate().toIso8601String();
         newMap[key] = timestampString;
+        print("Converted timestamp: $key -> $timestampString");
       } else if (value is Map<String, dynamic>) {
         // recursively search for DateTime values in nested maps
         newMap[key] = _processDateTimeValues(value);

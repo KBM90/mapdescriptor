@@ -1,6 +1,6 @@
 name: mapdescriptor
-description: Convert TimeStamp values to strings and vice versa in a given Map of key-value pairs. Easy  tool that handle the conversion of TimeStamp values to strings and vice versa respectively
-version: 1.0.2
+description: Convert TimeStamp values to strings and vice versa in a given Map of key-value pairs. 
+version: 1.0.4
 repository: https://github.com/KBM90/mapdescriptor
 
 environment:
