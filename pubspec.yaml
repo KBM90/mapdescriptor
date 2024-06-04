@@ -1,13 +1,14 @@
 name: mapdescriptor
-description: Convert TimeStamp values to strings and vice versa in a given Map of key-value pairs. 
-version: 1.0.4
+description: Work easily with nested maps  
+version: 1.0.8
 repository: https://github.com/KBM90/mapdescriptor
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
 
-# dependencies:
-#   path: ^1.8.0
+dependencies:
+  collection: ^1.17.0
+
 
 dev_dependencies:
   lints: ^2.0.0

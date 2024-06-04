@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 class MapDescriptor {
   final List<String> _timeStampKeys = [];
   List<String> get timeStampKeys => _timeStampKeys;
@@ -13,7 +15,7 @@ class MapDescriptor {
     if (map.isEmpty) {
       throw ArgumentError('You provided an empty map: $map');
     }
-    return _processDateTimeValues(map);
+    return _converTimeStampValuesToSTring(map);
   }
 
   /// Takes a map which may contains string forms values of TimeStamp and convert theses values
@@ -39,6 +41,10 @@ class MapDescriptor {
     });
     return newMap;
   }
+
+  //Converts all timestamp values inside nested maps to DateTime format
+  convertTimeStampToDateTime(Map<String, dynamic> map) =>
+      _convertTimeStampValuesToDates(map);
 
   bool containsTimeStamp(Map<String, dynamic> map) {
     if (map.isEmpty) {
@@ -89,21 +95,53 @@ class MapDescriptor {
     return copy;
   }
 
-  Map<String, dynamic> _processDateTimeValues(Map<String, dynamic> map) {
-    print("hello");
+  ///Compare two Maps Containing TimeStamp Values
+  //In Firestore, timestamps are stored as Timestamp objects, which are not directly comparable to other data types.
+  //When comparing two maps that contain Timestamp objects,
+  //the equals() method may return false even if the maps have the same data,
+  //because the Timestamp objects are not considered equal.
+
+  bool isEqual(Map<String, dynamic> map1, Map<String, dynamic> map2) {
+    return DeepCollectionEquality().equals(
+        MapDescriptor().convertTimeStampToStr(map1),
+        MapDescriptor().convertTimeStampToStr(map2));
+  }
+
+  Map<String, dynamic> _convertTimeStampValuesToDates(
+      Map<String, dynamic> map) {
     Map<String, dynamic> newMap = {...map};
     map.forEach((key, value) {
-      if (value is! double &&
+      if (value is! int &&
+          value is! double &&
           value is! String &&
           value is! bool &&
-          value is! List<dynamic> &&
-          value is! Map<String, dynamic>) {
-        String timestampString = value.toDate().toIso8601String();
+          value is! List &&
+          value is! Map && value != null) {
+        DateTime timestampString = value.toDate();
         newMap[key] = timestampString;
-        print("Converted timestamp: $key -> $timestampString");
       } else if (value is Map<String, dynamic>) {
         // recursively search for DateTime values in nested maps
-        newMap[key] = _processDateTimeValues(value);
+        newMap[key] = _convertTimeStampValuesToDates(value);
+      }
+    });
+    return newMap;
+  }
+
+  Map<String, dynamic> _converTimeStampValuesToSTring(
+      Map<String, dynamic> map) {
+    Map<String, dynamic> newMap = {...map};
+    map.forEach((key, value) {
+      if (value is! int &&
+          value is! double &&
+          value is! String &&
+          value is! bool &&
+          value is! List &&
+          value is! Map && value != null) {
+        String timestampString = value.toDate().toIso8601String();
+        newMap[key] = timestampString;
+      } else if (value is Map<String, dynamic>) {
+        // recursively search for DateTime values in nested maps
+        newMap[key] = _converTimeStampValuesToSTring(value);
       }
     });
     return newMap;

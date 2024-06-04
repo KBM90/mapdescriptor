@@ -19,3 +19,19 @@
 
  - Fixing some bugs.
  - Addinf the deepCopy method to get a deep copy of a Map object to prevent affecting the original one.
+
+## 1.0.5
+
+ -Fixing the deepCopy bugs when the map is fetched from firestore.
+
+## 1.0.6
+
+ -Adding isEqual() method to prevent the problem comming from the fact that in Firestore, timestamps are stored as Timestamp objects which are not directly comparable to other data types . 
+ 
+ # 1.0.7 
+    
+ -fix collection package version issue.
+
+  # 1.0.8
+
+  - Adding the convertTimeStampToDateTime(Map<String, dynamic> map) method which convert all timestamp values inside nested maps to DateTime format , which is needed to to upload into Firestore

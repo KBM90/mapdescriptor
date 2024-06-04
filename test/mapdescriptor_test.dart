@@ -25,6 +25,25 @@ void main() {
       expect(newMap['activities']["sport"]["start"], isA<String>());
     });
 
+    test('Convert timestamp to DateTime', () {
+      Map<String, dynamic> myMap = {
+        'name': 'John Doe',
+        'age': 30,
+        'timestamp': Timestamp(12115454, 121254),
+        "activities": {
+          "sport": {
+            "type": "Boxing",
+            "start": Timestamp(12115454, 121254),
+          },
+        }
+      };
+
+      Map<String, dynamic> newMap =
+          mapdescriptor.convertTimeStampToDateTime(myMap);
+
+      expect(newMap['timestamp'], isA<DateTime>());
+      expect(newMap['activities']["sport"]["start"], isA<DateTime>());
+    });
     test('Convert string to timestamp', () {
       Map<String, dynamic> myMap = {
         'name': 'John Doe',

@@ -111,6 +111,99 @@ void main() {
 }
 
 </code></pre>
+<h4>3-Compare two Maps Containing TimeStamp Values</h4>
+<p>
+  In Firestore, timestamps are stored as Timestamp objects, which are not directly comparable to other data types. <br>
+  When comparing two maps that contain Timestamp objects, <br>
+  The equals() of DeepCollectionEquality class from collection.dart package  method may return false even if the maps have the same data, 
+  because the Timestamp objects are not considered equal.</p>
+  That's why isEqual() method of the MapDescriptor package comes as a solution. <br>
+<pre><code>
+  final map1 = {
+    'name': 'John',
+    'age': 30,
+    'timestamp': Timestamp.fromMillisecondsSinceEpoch(1650000000000),
+    'address': {
+      'street': '123 Main St',
+      'city': 'Anytown',
+      'state': 'CA',
+    },
+  };
+
+  final map2 = {
+    'name': 'John',
+    'age': 30,
+    'timestamp': Timestamp.fromMillisecondsSinceEpoch(1650000000000),
+    'address': {
+      'street': '123 Main St',
+      'city': 'Anytown',
+      'state': 'CA',
+    },
+  };
+
+  final map3 = {
+    'name': 'Jane',
+    'age': 25,
+    'timestamp': Timestamp.fromMillisecondsSinceEpoch(1650000000000),
+    'address': {
+      'street': '456 Oak St',
+      'city': 'Sometown',
+      'state': 'NY',
+    },
+  };
+
+  print(isEqual(map1, map2)); // true
+  print(isEqual(map1, map3)); // false
+</code>
+</pre>
+<h5> Behind the scene this method convert any existing Timestamp value inside a map to ISO8601 String before comparing .
+</h5>
+<h4>4-Check if there is a TimeStamp Value inside a Map:</h4>
+<pre>
+<code>
+    import 'package:mapdescriptor/mapdescriptor.dart';
+    
+    
+   main() async {
+     final map1 = {
+    'name': 'Khalid Ibn Walid',
+    'age': 70,
+    'birthday': Timestamp(1560523991, 286000000),
+    };
+    print(MapDescriptor().containsTimeStamp(map1)); //output True
+     final map2 = {
+    'name': 'Andrew Tate',
+    'age': 30,
+    };
+    
+     print(MapDescriptor().containsTimeStamp(map2)); //output false
+}
+</code>
+<h4>Convert All TimeStamp values inside nested maps to DateTime format</h4>
+
+</pre>
+final myMap = {
+  'name': 'John Doe',
+  'age': 30,
+  'timestamp': Timestamp(seconds=1560523991, nanoseconds=286000000),
+  'activities': {
+    'activity1': {
+      'type': 'sport',
+      'timestamp': Timestamp(seconds=1560523991, nanoseconds=286000000),
+    },
+    'activity2': {
+      'type': 'Netflix',
+      'timestamp': Timestamp(seconds=1560523991, nanoseconds=286000000),
+    }
+  }
+};
+
+final newMap = convertTimeStampToDateTime(map);
+print(newMap) //output a map with all timestamp values converted to DateTime 
+
+<pre><code>
+  
+</code></pre>
 <h2 id="additional-information" style="color: #f02d64">Additional information</h2>
 <p>To find more information about the package, users can visit the package's GitHub repository at :
   <a href="https://github.com/KBM90/mapdescriptor">https://github.com/KBM90/mapdescriptor </a> 
@@ -164,7 +257,7 @@ void main() {
 <footer>
   <span class="no-break">
     mapdescriptor
-      1.0.3
+      1.0.8
   </span>
 
   
